@@ -53,8 +53,9 @@ std::vector<int> is_sink(int index, std::vector<int> height){
     }
 }
 
-int get_volume(int left_nearest_wall_index, int right_nearest_wall_index, std::vector<int> height) {
-    int cur_height = std::abs(height[left_nearest_wall_index] - height[right_nearest_wall_index]);
+int get_volume(int cur_index, int left_nearest_wall_index, int right_nearest_wall_index, std::vector<int> height) {
+    int min_height_bwt_left_right = std::min(height[left_nearest_wall_index], height[right_nearest_wall_index]);
+    int cur_height = min_height_bwt_left_right - height[cur_index];
     cur_height = cur_height > 0 ? cur_height : 1; // if the left wall height == right wall height, cur_height = 1
     int volume = cur_height * (right_nearest_wall_index-1 - left_nearest_wall_index);
     return volume;
@@ -80,7 +81,7 @@ public:
                 // is sink
                 printf("wall:  |       |\n");
                 printf("index: %d       %d\n", left_nearest_wall_index, right_nearest_wall_index);
-                int sink_volume = get_volume(left_nearest_wall_index, right_nearest_wall_index, height);
+                int sink_volume = get_volume(i, left_nearest_wall_index, right_nearest_wall_index, height);
                 printf("sink_volume: %d\n", sink_volume);
                 
                 if (std::find(wall_array.begin(), wall_array.end(), wall_pair) == wall_array.end()) {
@@ -99,6 +100,6 @@ public:
 
 int main(int argc, char *argv[]) {
     Solution *s = new Solution();
-    std::vector<int> height{ 0,1,0,2,1,0,1,3,2,1,2,1 };
+    std::vector<int> height{ 3, 0, 2, 0, 4 };
     printf("output:%d\n", s -> trap(height));
 }
