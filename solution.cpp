@@ -96,6 +96,50 @@ public:
         }
         return output;
     }
+
+    int trap_method2(std::vector<int>& height) { 
+        int water = 0;
+
+        // left[i] contains height of tallest wall to the 
+        // left of ith wall including itself 
+        std::vector<int> left(height.size(), 0); 
+
+        // Right [i] contains height of tallest wall to 
+        // the right of ith wall including itself 
+        std::vector<int> right(height.size(), 0);  
+
+        // Traverse the input heights and find the highest left wall for each term
+        left[0] = height[0];
+        for (int i = 1; i < height.size(); i++) 
+            left[i] = std::max(left[i - 1], height[i]); 
+
+        // Traverse the input heights and find the highest right wall for each term
+        right[height.size() - 1] = height[height.size() - 1]; 
+        for (int i = height.size() - 2; i >= 0; i--) 
+            right[i] = std::max(right[i + 1], height[i]); 
+
+        // Calculate the accumulated water element by element 
+        // ith water will be equal to min(left[i], right[i]) - arr[i] . 
+        for (int i = 0; i < height.size(); i++) 
+            water += std::min(left[i], right[i]) - height[i]; 
+
+        /*
+               if i = 1, height[i] = 0, left[i] = 3, right[i] = 4
+               min(left[i], right[i]) = 3, water = 3 - 0 = 3
+
+               ^
+               |
+               |       water        __ 
+               |    __   3         ||||
+             3 |   ||||//// __     ||||
+             2 |   ||||////||||    ||||
+             1 |   ||||////||||    ||||
+              -|------------------------------------------>
+                    */
+
+        return water; 
+    } 
+
 };
 
 int main(int argc, char *argv[]) {
